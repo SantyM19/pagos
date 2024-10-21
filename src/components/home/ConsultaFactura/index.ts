@@ -1,0 +1,1 @@
+export { ConsultaFactura } from './ConsultaFactura'

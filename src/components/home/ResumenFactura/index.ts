@@ -1,0 +1,1 @@
+export { ResumenFactura } from './ResumenFactura'
