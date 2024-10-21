@@ -1,0 +1,40 @@
+.Header
+  display: flex
+  flex-flow: row nowrap
+  align-items: center
+  padding: 0 2rem
+  justify-content: space-between
+  height: 100px
+  &__title
+    color: $color-secondary
+    width: 25%
+  & nav
+    display: block
+    height: 100%
+    width: 70%
+  &__list
+    display: flex
+    flex-flow: row nowrap
+    list-style: none
+    height: 100%
+    align-items: center
+    justify-content: space-between
+    margin: 0
+    & > li > a
+      color: $text-color
+      text-decoration: none
+      font-size: 1.2rem
+      font-weight: 400
+      height: 100%
+      display: flex     // Flexbox en elementos inline
+      align-items: center       // Centrado vertical
+      justify-content: center   // Centrado horizontal
+      // Efecto hover
+    & li
+      height: 100%
+      width: 33%
+    & li:hover 
+      background-color: $color-secondary
+    & li:active 
+      background-color: $color-secondary
+  
