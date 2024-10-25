@@ -1,5 +1,13 @@
 export const ResumenFactura = () => {
     return(
-      <div>Ñero 3</div>
+      <div>
+        <div>Ñero 3</div>
+        <div>Ñero 3</div>
+        <div>Ñero 3</div>
+        <div>Ñero 3</div>
+        <div>Ñero 3</div>
+        <div>Ñero 3</div>
+        <div>Ñero 3</div>
+      </div>
     )
   };

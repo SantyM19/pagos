@@ -1,0 +1,47 @@
+.Operadores
+  background-color: white
+  border-radius: 50px
+  display: flex
+  justify-content: space-around
+  align-items: center
+  padding: 5%
+  &__first
+    width: 20%
+    & h2
+      font-size: 50px
+      color: $color-primary
+    & h3 
+      color: $color-primary
+      font-size: 25px
+  &__line
+    width: 2px 
+    height: 150px
+    border-left: 2px solid $border-color
+  &__ops
+    display: flex
+    justify-content: space-around
+    width: 70%
+    & article
+      display: flex
+      flex-direction: column
+      justify-content: space-between
+      border-radius: 15px
+      border: 2px solid $border-color
+      width: 13%
+      padding: 2%
+      cursor: pointer
+      transition: background-color 0.3s ease
+      &:hover
+        background-color: #007BFF
+        width: 15%
+      & p
+        color: $border-color
+        text-align: center
+      & img
+        width: 100%
+  &__selected
+    background-color: #e0e0e0
+  &__selectedText
+    color: black  
+           
+
