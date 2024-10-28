@@ -3,12 +3,31 @@ import { useState } from "react";
 import { Operadores } from "app/components/home/Operadores"
 import { ConsultaFactura } from "app/components/home/ConsultaFactura"
 import { ResumenFactura } from "app/components/home/ResumenFactura"
+import {ModalEditar} from "app/components/home/ModalEditar";
 
 export default function Home() {
   const [selectedOperator, setSelectedOperator] = useState<string | null>(null);
   const [consultationMethod, setConsultationMethod] = useState<string>("reference");
   const [inputValue, setInputValue] = useState<string>("");
   const [facturaData, setFacturaData] = useState<any[]>([]); // Array para almacenar los datos
+  const [isEditing, setIsEditing] = useState(false); // Para abrir o cerrar el modal
+  const [currentFactura, setCurrentFactura] = useState(null); // Factura a editar o agregar
+
+  const handleSaveFactura = (updatedFactura: any) => {
+    if (currentFactura != null) {
+      // Actualiza la factura existente
+      const updatedData = facturaData.map((factura, index) =>
+        index === currentFactura ? updatedFactura : factura
+      );
+
+      console.log(updatedData)
+      setFacturaData(updatedData);
+    } else {
+      // Agrega una nueva factura si currentFactura es null
+      setFacturaData([...facturaData, updatedFactura]);
+    }
+    setIsEditing(false); // Cierra el modal después de guardar
+  };
 
   const handleAddClick = () => {
     const newEntry = {
@@ -20,15 +39,25 @@ export default function Home() {
     // Agrega el nuevo objeto al array
     setFacturaData((prevData) => [...prevData, newEntry]);
   
-    // Muestra un alert con la información
-    alert(`Operador: ${selectedOperator}, Método: ${consultationMethod}, Valor: ${inputValue}`);
     // Limpia los valores después de agregar
     setInputValue(""); // Limpia el input
   };
 
-  const showArrayClick = () =>{
-    console.log(facturaData)
-  }
+  const handleEdit = (index:any) => {
+    setCurrentFactura(index);
+    setIsEditing(true);
+  };
+
+  const handleAdd = () => {
+    setCurrentFactura(null); // null indica que es una nueva factura
+    setIsEditing(true);
+  };
+
+  const handleDelete = (index:any) => {
+    const updatedData = facturaData.filter((_, i) => i !== index);
+    setFacturaData(updatedData);
+  };
+
 
   return (
     <main>
@@ -36,14 +65,19 @@ export default function Home() {
       <ConsultaFactura 
         setConsultationMethod={setConsultationMethod} 
         setInputValue={setInputValue} 
-        handleAddClick={handleAddClick} 
+        handleAddClick={handleAddClick}
       />
-      <button
-            onClick={showArrayClick}
-          >
-            ver
-          </button>
-      <ResumenFactura data={facturaData} />
+      {facturaData.length > 0 ? <ResumenFactura data={facturaData} onEdit={handleEdit} 
+        onDelete={handleDelete} 
+        onAdd={handleAdd}/> : <br /> }
+
+      {isEditing && (
+        <ModalEditar 
+          factura={currentFactura != null ? facturaData[currentFactura] : null}
+          onSave={handleSaveFactura} 
+          onClose={() => setIsEditing(false)} 
+        />
+      )}
     </main>
   )
 }

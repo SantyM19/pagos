@@ -1,0 +1,73 @@
+.Modal
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  background: rgba(0, 0, 0, 0.5)
+  display: flex
+  align-items: center
+  justify-content: center
+  z-index: 1000
+  &__content
+    background-color: white
+    padding: 20px
+    border-radius: 50px
+    width: 70%
+    display: flex
+    flex-direction: column
+    align-items: center
+    & div
+      width: 80%
+      & h2
+        color: $color-primary
+      & h3
+        color: $color-primary
+  &__Operadores
+    display: flex
+    justify-content: space-around
+    align-items: center
+    width: 80%
+    & article
+      display: flex
+      flex-direction: column
+      justify-content: space-between
+      border-radius: 15px
+      border: 2px solid $border-color
+      width: 13%
+      padding: 2%
+      cursor: pointer
+      transition: background-color 0.3s ease
+      &:hover
+        background-color: #007BFF
+        width: 15%
+      & p
+        color: $border-color
+        text-align: center
+      & img
+        width: 100%
+  &__Consulta
+    display: flex
+    justify-content: space-around
+    align-items: center
+    width: 80%
+  &__selected
+    background-color: #e0e0e0
+  &__actions
+    display: flex
+    justify-content: start
+    margin-top: 20px
+    & button
+      background-color: $color-secondary
+      padding: 0.5rem 1rem
+      border-radius: 5px
+      border: none
+      width: 150px
+      border-radius: 100px
+      transition: background-color 0.3s ease
+      cursor: pointer
+      color: #000
+      margin-right: 5%
+      &:hover 
+        background-color: #007BFF // Azul cuando se pasa el cursor
+        color: #fff

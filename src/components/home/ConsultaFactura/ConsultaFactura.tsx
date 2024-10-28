@@ -3,7 +3,7 @@ import styles from "./ConsultaFactura.module.sass"
 import { useState } from "react"
 
 export const ConsultaFactura = ({ setConsultationMethod, setInputValue, handleAddClick } :any) => {
-  const [selectedOption, setSelectedOption] = useState("reference");
+  const [selectedOption, setSelectedOption] = useState("referencia");
   const [referenceValue, setReferenceValue] = useState("");
   const [cellphoneValue, setCellphoneValue] = useState("");
 
@@ -18,6 +18,14 @@ export const ConsultaFactura = ({ setConsultationMethod, setInputValue, handleAd
     setCellphoneValue(value);
     setInputValue(value); // Actualiza inputValue directamente
   };
+
+  const handleClick = () =>{
+    handleAddClick()
+      setCellphoneValue(" ")
+      setReferenceValue(" ")
+      setSelectedOption("referencia")
+
+  }
 
   const handleOptionChange = (event:any) => {
     const value = event.target.value;
@@ -36,23 +44,23 @@ export const ConsultaFactura = ({ setConsultationMethod, setInputValue, handleAd
         <div className={styles.ConsultaF__form__option}>
           <input
             type="radio"
-            id="reference"
+            id="referencia"
             name="option"
-            value="reference"
-            checked={selectedOption === "reference"}
+            value="referencia"
+            checked={selectedOption === "referencia"}
             onChange={handleOptionChange}
           />
-          <label htmlFor="reference">Número de referencia</label>
+          <label htmlFor="referencia">Número de referencia</label>
           <input
             type="text"
             placeholder="Digita la referencia"
             value={referenceValue}
             onChange={handleReferenceChange}
-            disabled={selectedOption !== "reference"}
+            disabled={selectedOption !== "referencia"}
           />
           <button
-            onClick={handleAddClick}
-            disabled={selectedOption !== "reference" || !referenceValue.trim()}
+            onClick={handleClick}
+            disabled={selectedOption !== "referencia" || !referenceValue.trim()}
           >
             Agregar
           </button>
@@ -64,8 +72,8 @@ export const ConsultaFactura = ({ setConsultationMethod, setInputValue, handleAd
             type="radio"
             id="cellphone"
             name="option"
-            value="cellphone"
-            checked={selectedOption === "cellphone"}
+            value="Numero de Celular"
+            checked={selectedOption === "Numero de Celular"}
             onChange={handleOptionChange}
           />
           <label htmlFor="cellphone">
@@ -75,14 +83,14 @@ export const ConsultaFactura = ({ setConsultationMethod, setInputValue, handleAd
           </label>
           <input
             type="text"
-            placeholder="Número celular"
+            placeholder="Numero de Celular"
             value={cellphoneValue}
             onChange={handleCellphoneChange}
-            disabled={selectedOption !== "cellphone"}
+            disabled={selectedOption !== "Numero de Celular"}
           />
           <button
-            onClick={handleAddClick}
-            disabled={selectedOption !== "cellphone" || !cellphoneValue.trim()}
+            onClick={handleClick}
+            disabled={selectedOption !== "Numero de Celular" || !cellphoneValue.trim()}
           >
             Agregar
           </button>

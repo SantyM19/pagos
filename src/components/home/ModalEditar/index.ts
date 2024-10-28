@@ -1,0 +1,1 @@
+export { ModalEditar } from './ModalEditar'
