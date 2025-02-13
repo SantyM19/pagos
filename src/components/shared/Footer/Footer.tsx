@@ -1,4 +1,4 @@
-import styles from './Footer.module.sass';
+import styles from './Footer.module.sass'
 export const Footer = () => {
   return(
     <footer className={styles.Footer}>
@@ -14,4 +14,4 @@ export const Footer = () => {
       </div>
     </footer>
   )
-};
+}

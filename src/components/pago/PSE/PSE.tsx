@@ -216,12 +216,12 @@ export const PSE = () => {
         });
 
         // Aquí puedes manejar el envío del formulario o limpiar los campos después del éxito
-        console.log("encript 2")
+        console.log("encript 2", megaPagos.tansactionId)
         const data2 = {
-          transactionId: forge.util.decode64(megaPagos.tansactionId)
+          data: forge.util.decode64(megaPagos.tansactionId)
         }
-        const encriptedData = await manejarEncriptacion(data2)
-        
+        const encriptedData = await manejarEncriptacion(forge.util.decode64(megaPagos.tansactionId))
+        console.log(encriptedData)
         if (encriptedData){
           const consultaInf = await realizarConsultaPagoPSE(megaPagos.bearer, encriptedData)
 
