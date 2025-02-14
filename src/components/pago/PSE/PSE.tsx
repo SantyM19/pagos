@@ -1,20 +1,21 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import styles from "./PSE.module.sass";
-import Swal from "sweetalert2";
-import { TransactionModal } from "../Modal/Modal";
+"use client"
+import React, { useEffect, useState } from "react"
+import styles from "./PSE.module.sass"
+import Swal from "sweetalert2"
 import {
   consultarBancos,
   consultarLlave,
-  realizarConsultaPagoPSE,
   realizarLoging,
   realizarPagoPSE,
-} from "app/services/megaPagos/consultasMegaPagos";
-import forge from "node-forge";
+} from "app/services/megaPagos/consultasMegaPagos"
+import { saveToCache } from "app/utils/storage"
+import { manejarEncriptacion } from "app/utils/encript"
 
-export const PSE = () => {
-  const [resultado, setResultado] = useState<any | null>(null);
-  const [error, setError] = useState<string | null>(null);
+interface PSEProps {
+  total: number;
+}
+
+export const PSE = ({ total }: PSEProps) => {
   const [megaPagos, setMegaPagos] = useState({
     bearer: "",
     bancos: [
@@ -26,12 +27,15 @@ export const PSE = () => {
     publicKey: "",
     idCliente: "",
     codeTrazabilidad: "",
-    pseURL:"",
-    tansactionId:""
-  });
+    pseURL: "",
+    tansactionId: "",
+    bank: ""
+  })
+
   const [formType, setFormType] = useState<"natural" | "juridica" | "">(
     "natural"
-  );
+  )
+
   const [formData, setFormData] = useState({
     tipoId: "",
     identificacion: "",
@@ -44,7 +48,7 @@ export const PSE = () => {
     empresa: "",
     banco: "",
     terminos: false,
-  });
+  })
 
   const [errors, setErrors] = useState({
     tipoId: false,
@@ -58,24 +62,12 @@ export const PSE = () => {
     empresa: false,
     banco: false,
     terminos: false,
-  });
+  })
 
   const results: results = {
     data: "",
     error: "",
-  };
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const transactionData = {
-    date: "19 / 02 / 2023",
-    amount: "$440.000",
-    paymentId: "15252dfdd",
-    paymentMethod: "PSE",
-    status: "APROBADO",
-    requestId: "125263asdsad",
-    email: "some@hotmail",
-  };
+  }
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -171,17 +163,18 @@ export const PSE = () => {
             idtiposolicitud: 5,
             linkcode: "-1",
             solicitudenvio: "N",
-            externalurl: "https://pagos-rose.vercel.app/",
+            //externalurl: "http://localhost:3000/paid",
+            externalurl: "https://pagos-rose.vercel.app/paid",
           },
           step1: {
             name: "Servicios Moviles",
             description: "Pago Servicios Moviles",
-            value: 10000.58,
+            value: total,
             in_stock: true,
             idimpuesto: 21,
             shipping_cost: 0,
             requested_units: 1,
-            total_amount: 10000.58,
+            total_amount: total,
             payment_amount: 0,
           },
           step3: {
@@ -200,10 +193,10 @@ export const PSE = () => {
             },
           },
         },
-      }
+      };
 
-      console.log("encript 1")
-      const resultadoEncriptado = await manejarEncriptacion(data);
+      const dataString = JSON.stringify(data);
+      const resultadoEncriptado = await manejarEncriptacion(dataString,megaPagos.publicKey)
 
       await crearPago(resultadoEncriptado);
 
@@ -212,33 +205,10 @@ export const PSE = () => {
           title: "Transaccion ejecutada",
           text: "Consultar como va tu transaccion.",
           icon: "success",
-          confirmButtonText: "Consultat",
-        });
-
-        // Aquí puedes manejar el envío del formulario o limpiar los campos después del éxito
-        console.log("encript 2", megaPagos.tansactionId)
-        const data2 = {
-          tansactionId: megaPagos.tansactionId
-        }
-        const encriptedData = await manejarEncriptacion(forge.util.decode64(megaPagos.tansactionId))
-        console.log(encriptedData)
-        if (encriptedData){
-          const consultaInf = await realizarConsultaPagoPSE(megaPagos.bearer, encriptedData)
-
-          console.log(consultaInf)
-        } 
-        
-        openModal();
-      }, 10000); // 5 segundos de espera
+          confirmButtonText: "Consultar",
+        })
+      }, 5000) // 5 segundos de espera
     }
-  };
-
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
   }
 
   const crearPago = async (resultadoEncriptado: any) => {
@@ -246,11 +216,13 @@ export const PSE = () => {
     megaPagos.codeTrazabilidad = pago.data.trazabilityCode
     megaPagos.tansactionId = pago.data.transactionId
     megaPagos.pseURL = pago.data.pseURL
+    megaPagos.bank = formData.banco
 
     setMegaPagos(megaPagos)
+    saveToCache(megaPagos)
 
-    window.open(megaPagos.pseURL, "_blank", "width=900,height=600,scrollbars=yes,resizable=yes");
-
+    window.location.href = megaPagos.pseURL
+    window.close()
   }
 
   const ejecutarConsultas = async () => {
@@ -284,86 +256,7 @@ export const PSE = () => {
   // Ejecutar la función solo una vez al montar el componente
   useEffect(() => {
     ejecutarConsultas()
-  }, []); // Array vacío asegura que se ejecuta solo una vez
-
-  // Función para generar una llave aleatoria
-  const generarLlaveAleatoria = (): string => {
-    return forge.random.getBytesSync(32); // se usa plana
-  }
-
-  // Función para encriptar con AES
-  const encriptarAES = (value: any, key: string): string => {
-    const keyBytes = forge.util.createBuffer(key);
-    // Generate a random IV
-    const iv = forge.random.getBytesSync(16);
-    // Create a cipher object
-    const cipherObject = forge.cipher.createCipher("AES-CBC", keyBytes);
-
-    cipherObject.start({ iv: iv });
-    cipherObject.update(forge.util.createBuffer(value, "utf8"));
-    cipherObject.finish();
-
-    const ciphertext = cipherObject.output.getBytes();
-    const ivBase64 = forge.util.encode64(iv);
-    const ciphertextBase64 = forge.util.encode64(ciphertext);
-
-    return forge.util.encode64(
-      JSON.stringify({ iv: ivBase64, value: ciphertextBase64 })
-    );
-  }
-
-  // Función para encriptar la llave aleatoria con la llave pública usando RSA
-  const encriptarRSA = (key: string, publicKeyBase64: string): string => {
-    const publicKey = forge.pki.publicKeyFromPem(publicKeyBase64); // Crear la llave pública RSA
-
-    const encryptedKey = publicKey.encrypt(key, "RSA-OAEP", {
-      md: forge.md.sha1.create(),
-      mgf1: {
-        md: forge.md.sha1.create(),
-      },
-    }); // Encriptar con RSA-OAEP
-    return forge.util.encode64(encryptedKey);
-  }
-
-  const manejarEncriptacion = async (data:any) => {
-    try {
-      // Paso 1: Obtener la llave pública desde la API
-      const publicKeyBase64 = megaPagos.publicKey;
-      const derBytes = Buffer.from(publicKeyBase64, "base64").toString("ascii");
-
-      // Paso 2: Generar una llave aleatoria de 256 bits
-      const randomKey = generarLlaveAleatoria();
-
-      console.log(data)
-
-      const dataString = JSON.stringify(data)
-
-      // Paso 4: Encriptar los datos con AES
-      const encryptedData = encriptarAES(dataString, randomKey)
-
-      // Paso 5: Encriptar la llave aleatoria con RSA
-      const encryptedKey = encriptarRSA(randomKey, derBytes)
-
-      // Construir el objeto final
-      const resultadoEncriptado = {
-        encryptedKey,
-        encryptedData,
-      }
-
-      // Paso 6: Codificar el resultado en Base64
-      const resultadoBase64 = forge.util.encode64(
-        JSON.stringify(resultadoEncriptado)
-      )
-
-      // Actualizar el estado con el resultado
-      setResultado(resultadoBase64)
-      setError(null)
-      return resultadoBase64
-    } catch (err: any) {
-      console.error("Error en el proceso de encriptación:", err)
-      setError(err.message)
-    }
-  }
+  }, []) // Array vacío asegura que se ejecuta solo una vez
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -385,7 +278,7 @@ export const PSE = () => {
       empresa: "",
       banco: "",
       terminos: false,
-    });
+    })
 
   return (
     <section className={styles.Payment}>
@@ -728,11 +621,6 @@ export const PSE = () => {
           Pagar
         </button>
       </form>
-      <TransactionModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        transaction={transactionData}
-      />
     </section>
-  );
-};
+  )
+}

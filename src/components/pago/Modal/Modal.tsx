@@ -93,5 +93,5 @@ export const TransactionModal = ({ isOpen, onClose, transaction }: any) => {
         </button>
       </div>
     </div>
-  );
-};
+  )
+}

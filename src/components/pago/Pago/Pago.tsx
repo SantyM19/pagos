@@ -3,7 +3,11 @@ import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import styles from "./Pago.module.sass"
 
-export const Pago = () => {
+interface PagoProps {
+  onTotalChange: (total: number) => void;
+}
+
+export const Pago = ({ onTotalChange }: PagoProps) => {
   const [facturaData, setFacturaData] = useState<any[]>([]); // Array para almacenar los datos
 
   const searchParams = useSearchParams()
@@ -17,7 +21,6 @@ export const Pago = () => {
         if (Array.isArray(parsedData)) {
           console.log("Datos recibidos:", parsedData);
           setFacturaData(parsedData);
-          // Aquí puedes hacer lo que necesites con parsedData
         } else {
           console.error("Los datos no son un array");
         }
@@ -28,6 +31,11 @@ export const Pago = () => {
   }, []);
 
   const totalPagar = facturaData.reduce((total, item) => total + item.amount, 0);
+
+  // Enviar el total al padre cada vez que cambia
+  useEffect(() => {
+    onTotalChange(totalPagar);
+  }, [totalPagar, onTotalChange]);
 
   return (
     <section className={styles.DescriptionP}>
@@ -57,5 +65,5 @@ export const Pago = () => {
         <strong>Total a pagar: </strong> ${totalPagar.toLocaleString('es-CO')} COP
       </div>
     </section>
-  );
-};
+  )
+}
