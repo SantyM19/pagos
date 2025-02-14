@@ -23,7 +23,7 @@ export const Header = () => {
             <Link href="/faqs" className={styles.Nav__link}>Preguntas frecuentes</Link>
           </li>
           <li>
-            <Link href="/blog" className={styles.Nav__link}>Blog</Link>
+            <Link href="/blogg" className={styles.Nav__link}>Blog</Link>
           </li>
         </ul>
       </nav>
