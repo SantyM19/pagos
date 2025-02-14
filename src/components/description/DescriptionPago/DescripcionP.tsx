@@ -57,6 +57,7 @@ export const DescriptionP = () => {
 
   return (
     <section className={styles.DescriptionP}>
+      <div className={styles.DescriptionP__table}>
       <table>
         <thead>
           <tr>
@@ -89,6 +90,7 @@ export const DescriptionP = () => {
           ))}
         </tbody>
       </table>
+      </div>
       <div className={styles.DescriptionP__total}>
         <strong>Total a pagar: </strong> ${totalPagar.toLocaleString('es-CO')} COP
       </div>

@@ -65,8 +65,8 @@ export const ModalEditar = ({ factura, onSave, onClose }: any) => {
               value={method}
               onChange={(e) => setMetodoConsulta(e.target.value)}
             >
-              <option value="reference">Referencia</option>
-              <option value="Número de Teléfono">Número de Teléfono</option>
+              <option value="Número de Teléfono">Referencia</option>
+              <option value="reference">Número de Teléfono</option>
             </select>
           </div>
           <div>

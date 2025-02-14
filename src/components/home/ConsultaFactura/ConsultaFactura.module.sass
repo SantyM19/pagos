@@ -93,10 +93,19 @@
   @media (max-width: 768px)  
     &__form
       &__option
-        flex-direction: column
-        justify-content: space-between
+        justify-content: center
+        flex-wrap: wrap
         gap: 20px
-        margin-bottom: 30px
+        margin-bottom: 5%
+        & label
+          width: 75%
+        & input[type="text"]
+          width: 90% 
+        & input[disabled]
+          width: 20% 
+        & button 
+          width: 80%
+
     &__barCode 
       &__pCode
         font-size: 6px !important
