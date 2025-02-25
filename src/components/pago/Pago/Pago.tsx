@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import styles from "./Pago.module.sass"
+import { useRouter } from "next/navigation";
 
 interface PagoProps {
   onTotalChange: (total: number) => void;
@@ -9,7 +10,7 @@ interface PagoProps {
 
 export const Pago = ({ onTotalChange }: PagoProps) => {
   const [facturaData, setFacturaData] = useState<any[]>([]); // Array para almacenar los datos
-
+  const router = useRouter();
   const searchParams = useSearchParams()
   const dataLlegada = searchParams.get("data")
 
@@ -37,6 +38,11 @@ export const Pago = ({ onTotalChange }: PagoProps) => {
     onTotalChange(totalPagar);
   }, [totalPagar, onTotalChange]);
 
+  const handlerUpdate = () => {
+    router.push(
+      `/descripcion?data=${encodeURIComponent(JSON.stringify(facturaData))}`
+    );
+  }
   return (
     <section className={styles.DescriptionP}>
       <div className={styles.DescriptionP__table}>
@@ -64,6 +70,10 @@ export const Pago = ({ onTotalChange }: PagoProps) => {
       <div className={styles.DescriptionP__total}>
         <strong>Total a pagar: </strong> ${totalPagar.toLocaleString('es-CO')} COP
       </div>
+      
+        <button onClick={handlerUpdate} className={styles.DescriptionP__add}>
+          Adicionar o actualizar factura
+        </button>
     </section>
   )
 }

@@ -182,7 +182,7 @@ export const PSE = ({ total }: PSEProps) => {
             payment_method: "pse",
             biller_name: formData.nombre,
             biller_email: formData.email,
-            biller_address: formData.direccion,
+            biller_address: "cra 12345",
             payment_info: {
               pse_bank: formData.banco,
               pse_person_type: "person",
@@ -227,25 +227,25 @@ export const PSE = ({ total }: PSEProps) => {
 
   const ejecutarConsultas = async () => {
     try {
-      // Ejecuta todas las consultas
       const consulta = await realizarLoging();
+    const accessToken = consulta.data.token.accessToken;
+    const idCliente = consulta.data.comercio.idusuario;
 
-      results.data = consulta.data.token.accessToken;
+    // Obtener los bancos
+    const banksResponse = await consultarBancos(accessToken);
+    const bancos = banksResponse.data; // Asegurar que obtenemos el array correcto
 
-      megaPagos.bearer = results.data;
-      megaPagos.idCliente = consulta.data.comercio.idusuario;
+    // Obtener la llave pública
+    const keysResponse = await consultarLlave();
+    const publicKey = keysResponse.data.public_key;
 
-      const banks = await consultarBancos(results.data);
-
-      results.data = banks.data;
-      megaPagos.bancos = results.data;
-
-      const keys = await consultarLlave();
-
-      results.data = keys.data.public_key;
-      megaPagos.publicKey = results.data;
-
-      setMegaPagos(megaPagos);
+    setMegaPagos((prevState) => ({
+      ...prevState,
+      bearer: accessToken,
+      idCliente,
+      bancos, // Actualizamos los bancos correctamente
+      publicKey,
+    }));
     } catch (error) {
       console.error("Error en la ejecución de consultas:", error);
     } finally {
@@ -384,23 +384,6 @@ export const PSE = ({ total }: PSEProps) => {
                   }
                 />
               </div>
-            </div>
-
-            <div className={styles.Payment__group}>
-              <label>Direccion</label>
-
-              <input
-                type="text"
-                name="direccion"
-                value={formData.direccion}
-                onChange={handleInputChange}
-                placeholder="Ingresar dígitos"
-                className={
-                  errors.confirmEmail
-                    ? styles.Payment__group_errorInput
-                    : styles.Payment__group_input
-                }
-              />
             </div>
 
             <div className={styles.Payment__group}>

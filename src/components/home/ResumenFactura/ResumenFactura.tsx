@@ -4,7 +4,6 @@ import styles from "./ResumenFactura.module.sass"
 import { realizarConsulta } from "app/services/megaRed/consultaServiciosMoviles"
 import { useRouter } from "next/navigation"
 import React, { useState } from "react"
-import { Loader } from "app/components/shared/Loader"
 
 export const ResumenFactura = ({ data, onEdit, onDelete, onAdd }: any) => {
   const router = useRouter();
@@ -32,7 +31,7 @@ export const ResumenFactura = ({ data, onEdit, onDelete, onAdd }: any) => {
   }
 
   let createConsult = data.map((factura: InfConsult) => {
-    const operadorKey = factura.operator as keyof typeof operadoresManual;
+    const operadorKey = factura.operator as keyof typeof operadoresManual
     return {
       barcode: factura.method == "referencia" ? "" : factura.value,
       reference: factura.value,

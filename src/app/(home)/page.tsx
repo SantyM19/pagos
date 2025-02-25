@@ -3,11 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import { Operadores } from "app/components/home/Operadores"
 import { ConsultaFactura } from "app/components/home/ConsultaFactura"
 import { ResumenFactura } from "app/components/home/ResumenFactura"
-import {ModalEditar} from "app/components/home/ModalEditar";
+import { ModalEditar } from "app/components/home/ModalEditar";
 
 export default function Home() {
   const [selectedOperator, setSelectedOperator] = useState<string | null>(null)
-  const [consultationMethod, setConsultationMethod] = useState<string>("referencia")
+  const [consultationMethod, setConsultationMethod] = useState<string>("")
   const [inputValue, setInputValue] = useState<string>("")
   const [facturaData, setFacturaData] = useState<any[]>([]) // Array para almacenar los datos
   const [isEditing, setIsEditing] = useState(false) // Para abrir o cerrar el modal
@@ -22,6 +22,10 @@ export default function Home() {
     }
   }, [selectedOperator])
 
+  useEffect(() => {
+    console.log("Método de consulta actualizado en el padre:", consultationMethod);
+  }, [consultationMethod])
+
   const handleSaveFactura = (updatedFactura: any) => {
     if (currentFactura != null) {
       // Actualiza la factura existente
@@ -29,7 +33,6 @@ export default function Home() {
         index === currentFactura ? updatedFactura : factura
       )
 
-      console.log(updatedData)
       setFacturaData(updatedData)
     } else {
       // Agrega una nueva factura si currentFactura es null

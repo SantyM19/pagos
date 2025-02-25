@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import styles from "./DescripcionP.module.sass";
 import { useRouter } from "next/navigation";
+import { ModalEditar2 } from "../ModalEditar2";
 
 export const DescriptionP = () => {
   const router = useRouter();
@@ -22,12 +23,12 @@ export const DescriptionP = () => {
   const handleAdd = () => {
     setCurrentFactura(null); // null indica que es una nueva factura
     setIsEditing(true);
-  };
+  }
 
   const handleDelete = (index: any) => {
     const updatedData = facturaData.filter((_, i) => i !== index);
     setFacturaData(updatedData);
-  };
+  }
 
   const payHandler = () => {
     router.push(
@@ -53,7 +54,22 @@ export const DescriptionP = () => {
     }
   }, []);
 
-  const totalPagar = facturaData.reduce((total, item) => total + item.amount, 0);
+  const totalPagar = facturaData.reduce((total, item) => total + item.amount, 0)
+
+  const handleSaveFactura = (updatedFactura: any) => {
+    if (currentFactura != null) {
+      // Actualiza la factura existente
+      const updatedData = facturaData.map((factura, index) =>
+        index === currentFactura ? updatedFactura : factura
+      )
+
+      setFacturaData(updatedData)
+    } else {
+      // Agrega una nueva factura si currentFactura es null
+      setFacturaData([...facturaData, updatedFactura])
+    }
+    setIsEditing(false) // Cierra el modal después de guardar
+  }
 
   return (
     <section className={styles.DescriptionP}>
@@ -102,6 +118,13 @@ export const DescriptionP = () => {
           Confirmar Pago
         </button>
       </div>
+      {isEditing && (
+        <ModalEditar2 
+          factura={currentFactura != null ? facturaData[currentFactura] : null}
+          onSave={handleSaveFactura} 
+          onClose={() => setIsEditing(false)} 
+        />
+      )}
     </section>
   );
 };

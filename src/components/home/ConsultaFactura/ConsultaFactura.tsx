@@ -60,16 +60,16 @@ export const ConsultaFactura = ({ setConsultationMethod, setInputValue, handleAd
   }
 
   const handleOptionChange = (event: any) => {
-    const value = event.target.value
-
-    // Si el operador no está en la lista de operadores con ambos métodos, no permite referencia
-    if (value !== "referencia" && !operadoresConAmbosMetodos.includes(selectedOperator)) {
-      setErrorMessage(`El operador ${selectedOperator} solo acepta referencia.`)
-      return
+    const value = event.target.value;
+  
+    // Verifica si la opción seleccionada es "Número de Celular" y si el operador lo permite
+    if (value === "Numero de Celular" && !operadoresConAmbosMetodos.includes(selectedOperator)) {
+      setErrorMessage(`El operador ${selectedOperator} solo acepta referencia.`);
+      return;
     }
-
+  
     setSelectedOption(value)
-    setConsultationMethod(value)
+    setConsultationMethod(value) // Asegura que el método de consulta se actualiza correctamente
     setErrorMessage("")
   }
 
