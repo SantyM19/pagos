@@ -9,8 +9,8 @@ export const Footer = () => {
         <p>Medellin, Antioquia</p>
       </div>
       <div> 
-        <p>Termino y condiciones</p>
-        <p>Politacas de privacidad</p>
+        <p>Terminos y condiciones</p>
+        <p>Politicas de privacidad</p>
       </div>
     </footer>
   )

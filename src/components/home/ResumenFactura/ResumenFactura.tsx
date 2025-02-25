@@ -34,11 +34,11 @@ export const ResumenFactura = ({ data, onEdit, onDelete, onAdd }: any) => {
   let createConsult = data.map((factura: InfConsult) => {
     const operadorKey = factura.operator as keyof typeof operadoresManual;
     return {
-      barcode: factura.method == "reference" ? "" : factura.value,
+      barcode: factura.method == "referencia" ? "" : factura.value,
       reference: factura.value,
-      method: factura.method == "reference" ? "MANUAL" : "AUTOMATIC",
+      method: factura.method == "referencia" ? "MANUAL" : "AUTOMATIC",
       code_agreement:
-        factura.method == "reference"
+        factura.method == "referencia"
           ? operadoresManual[operadorKey]
           : operadoresAut[operadorKey],
       code_bank: "0"
