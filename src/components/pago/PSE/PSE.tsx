@@ -221,8 +221,16 @@ export const PSE = ({ total }: PSEProps) => {
     setMegaPagos(megaPagos)
     saveToCache(megaPagos)
 
-    window.location.href = megaPagos.pseURL
-    window.close()
+    // Abrimos la URL ANTES de cerrar la pestaña actual
+    const nuevaVentana = window.open(megaPagos.pseURL, "_blank");
+
+    if (nuevaVentana) {
+        // Si la nueva pestaña se abre correctamente, cerramos la actual
+        window.close();
+    } else {
+        // Si el navegador bloquea la nueva pestaña, redirigimos en la misma
+        window.location.href = megaPagos.pseURL;
+    }
   }
 
   const ejecutarConsultas = async () => {
