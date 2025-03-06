@@ -63,10 +63,12 @@ export const ModalEditar2 = ({ factura, onSave, onClose }: any) => {
     try {
       const operadorKey = operator as keyof typeof operadoresManual;
       const consulta = await realizarConsulta(
-        method == "referencia" ? "" : value,
+        method == "referencia" || method == "Referencia" 
+          ? "" : value,
         value,
-        method == "referencia" ? "MANUAL" : "AUTOMATIC",
-        method == "referencia"
+        method == "referencia" || method == "Referencia" 
+          ? "MANUAL" : "AUTOMATIC",
+        method == "referencia" || method == "Referencia"
           ? operadoresManual[operadorKey]
           : operadoresAut[operadorKey],
         "0"
@@ -89,8 +91,8 @@ export const ModalEditar2 = ({ factura, onSave, onClose }: any) => {
   }
   
   const availableMethods = ["Tigo", "Wom"].includes(operator)
-    ? ["número de Teléfono", "referencia"]
-    : ["referencia"];
+    ? ["Número de Teléfono", "Referencia"]
+    : ["Referencia"];
 
   return (
     <div className={styles.Modal}>

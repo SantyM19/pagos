@@ -35,8 +35,8 @@ export const ModalEditar = ({ factura, onSave, onClose }: any) => {
   };
 
   const availableMethods = ["Tigo", "Wom"].includes(operator)
-    ? ["número de Teléfono", "referencia"]
-    : ["referencia"];
+    ? ["Número de Teléfono", "Referencia"]
+    : ["Referencia"];
 
   return (
     <div className={styles.Modal}>

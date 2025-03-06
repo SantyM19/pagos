@@ -72,7 +72,7 @@ export const Pago = ({ onTotalChange }: PagoProps) => {
       </div>
       
         <button onClick={handlerUpdate} className={styles.DescriptionP__add}>
-          Adicionar o actualizar factura
+          Volver
         </button>
     </section>
   )

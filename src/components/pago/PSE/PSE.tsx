@@ -10,12 +10,14 @@ import {
 } from "app/services/megaPagos/consultasMegaPagos"
 import { saveToCache } from "app/utils/storage"
 import { manejarEncriptacion } from "app/utils/encript"
+import { useRouter } from "next/navigation"
 
 interface PSEProps {
   total: number;
 }
 
 export const PSE = ({ total }: PSEProps) => {
+  const router = useRouter()
   const [megaPagos, setMegaPagos] = useState({
     bearer: "",
     bancos: [
@@ -37,7 +39,7 @@ export const PSE = ({ total }: PSEProps) => {
   )
 
   const [formData, setFormData] = useState({
-    tipoId: "",
+    tipoId: "CedulaDeCiudadania",
     identificacion: "",
     nombre: "",
     celular: "",
@@ -222,15 +224,9 @@ export const PSE = ({ total }: PSEProps) => {
     saveToCache(megaPagos)
 
     // Abrimos la URL ANTES de cerrar la pestaña actual
-    const nuevaVentana = window.open(megaPagos.pseURL, "_blank");
-
-    if (nuevaVentana) {
-        // Si la nueva pestaña se abre correctamente, cerramos la actual
-        window.close();
-    } else {
-        // Si el navegador bloquea la nueva pestaña, redirigimos en la misma
-        window.location.href = megaPagos.pseURL;
-    }
+    router.push(
+      megaPagos.pseURL
+    )
   }
 
   const ejecutarConsultas = async () => {
@@ -290,7 +286,7 @@ export const PSE = ({ total }: PSEProps) => {
 
   return (
     <section className={styles.Payment}>
-      <h3 className={styles.Payment__title}>Transferencia Interbancaria PSE</h3>
+      <h3 className={styles.Payment__title}>PSE</h3>
       <form className={styles.Payment__form} onSubmit={handleSubmit}>
         <div className={styles.Payment__group}>
           <label>¿Eres Persona Natural o Jurídica?</label>

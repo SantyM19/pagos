@@ -26,8 +26,13 @@ export const DescriptionP = () => {
   }
 
   const handleDelete = (index: any) => {
-    const updatedData = facturaData.filter((_, i) => i !== index);
-    setFacturaData(updatedData);
+    const updatedData = facturaData.filter((_, i) => i !== index)
+    setFacturaData(updatedData)
+    if (facturaData.length == 1){
+      router.push(
+        `/`
+      )
+    }
   }
 
   const payHandler = () => {
